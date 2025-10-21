@@ -58,7 +58,7 @@ body {
 }
 
 .login-button {
-    background-color: red;
+    background-color: rgb(85, 0, 255);
     color: white;
     border: none;
     border-radius: 5px;
@@ -71,7 +71,7 @@ body {
 
 .signup-button:hover,
 .login-button:hover {
-    background-color: darkred;
+    background-color: rgb(255, 0, 0);
 }
 
 

@@ -1,24 +1,74 @@
-		*{
-			text-decoration: none;
-		}
-		.navbar{
-			background: crimson; font-family: calibri; padding-right: 15px;padding-left: 15px;
-		}
-		.navdiv{
-			display: flex; align-items: center; justify-content: space-between;
-		}
-		.logo a{
-			font-size: 35px; font-weight: 600; color: white;
-		}
-		li{
-			list-style: none; display: inline-block;
-		}
-		li a{
-			color: white; font-size: 18px; font-weight: bold; margin-right: 25px;
-		}
-		button{
-			background-color: black; margin-left: 10px; border-radius: 10px; padding: 10px; width: 90px;
-		}
-		button a{
-			color: white; font-weight: bold; font-size: 15px;
-		}
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #000000;
+}
+
+.navbar {
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px;
+    height: 50px;
+    white-space: nowrap;
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 100%; 
+    max-width: 1200px; 
+    white-space: nowrap;
+}
+
+.logo {
+    margin-right: auto; 
+}
+
+.logo a {
+    text-decoration: none;
+}
+
+.logo img {
+    max-width: auto;
+    height: 100px;
+    transform: none;
+}
+
+.main-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    white-space: nowrap;
+}
+
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 15px 15px;
+    font-size: 15px;
+    font-weight: lighter;
+    margin: 10px 15px;
+    white-space: nowrap;
+}
+
+.navbar button {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    height: 40px;
+    width: 100px;
+    margin-left: 50px;
+    cursor: pointer;
+    transform: none;
+    white-space: nowrap;
+}

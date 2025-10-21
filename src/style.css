@@ -18,43 +18,43 @@ body {
 
 .navbar-container {
     display: flex;
-    justify-content: space-between; /* Spreads content (Logo, Nav, Buttons) */
+    justify-content: space-between; 
     align-items: center;
-    margin: 0px 0px; /* Center the container on the page */
+    margin: 0px 0px; 
 }
 
-/* LOGO STYLES */
+
 .logo img {
-    /* KEY CHANGE: Reduced the height to make the navbar thinner */
+
     height: 40px; 
-    display: block; /* Removes any default inline spacing below the image */
+    display: block; 
 }
 
-/* MAIN NAVIGATION LINKS */
+
 .main-nav {
     display: flex;
     flex-grow: 1;
-    justify-content: center; /* Center the links */
-    gap: 10px; /* Space between links */
+    justify-content: center; 
+    gap: 10px; 
 }
 
 .main-nav a {
     color: white;
     text-decoration: none;
-    padding: 10px 15px; /* Padding for click area */
+    padding: 10px 15px; 
     font-size: 16px;
     font-weight: 500;
     transition: color 0.3s;
 }
 
 .main-nav a:hover {
-    color: red; /* Highlight on hover */
+    color: red; 
 }
 
-/* AUTH BUTTONS */
+
 .auth-buttons {
     display: flex;
-    gap: 15px; /* Space between the two buttons */
+    gap: 15px; 
 }
 
 .signup-button,
@@ -75,26 +75,26 @@ body {
     background-color: darkred;
 }
 
-/* Ensure the body and page container cover the whole screen */
+
 .login-page {
-    /* Set the background for the entire login view */
+    position: relative;
     background-color: #000000; 
-    min-height: 100vh; /* Full viewport height */
+    min-height: 100vh; 
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
+    justify-content: center; 
+    align-items: center; 
     padding: 20px;
     font-family: 'Roboto', sans-serif;
 }
 
-/* The main container for the form */
+
 .login-card {
-    background-color: #1a1a1a; /* Dark gray card background */
+    background-color: #1a1a1a; 
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     width: 100%;
-    max-width: 400px; /* Standard form width */
+    max-width: 400px;
     text-align: center;
     color: white;
 }
@@ -106,7 +106,7 @@ body {
     font-weight: 500;
 }
 
-/* Grouping for label and input */
+
 .form-group {
     text-align: left;
     margin-bottom: 20px;
@@ -120,7 +120,7 @@ body {
     color: #ccc;
 }
 
-/* Input fields */
+
 .form-group input {
     width: 100%;
     padding: 12px 15px;
@@ -133,16 +133,16 @@ body {
 }
 
 .form-group input:focus {
-    border-color: red; /* Highlight on focus */
+    border-color: red; 
     outline: none;
     box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
 
-/* Login Button */
+
 .login-button {
     width: 100%;
     padding: 15px;
-    background-color: red; /* Your signature color */
+    background-color: red; 
     color: white;
     border: none;
     border-radius: 6px;
@@ -157,7 +157,6 @@ body {
     background-color: darkred;
 }
 
-/* Links (Forgot Password/Sign Up) */
 .forgot-password a, .signup-link a {
     color: red;
     text-decoration: none;
@@ -173,4 +172,13 @@ body {
     margin-top: 15px;
     font-size: 14px;
     color: #aaa;
+}
+
+footer {
+    background-color: black;
+    color: #9a9999;
+    padding: 20px 0;
+    text-align: center;
+    bottom: 0;
+    width: 100%;
 }

@@ -3,72 +3,174 @@
 }
 
 body {
-    margin: 0;
+    margin: 0; 
     padding: 0;
     font-family: 'Roboto', sans-serif;
     background-color: #000000;
 }
 
-.navbar {
-    background-color: #000000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 20px;
-    height: 50px;
-    white-space: nowrap;
+
+.header {
+    background-color: #000000; 
+    border-bottom: 1px solid #333;
+    padding: 0 200px; 
 }
 
 .navbar-container {
     display: flex;
+    justify-content: space-between; /* Spreads content (Logo, Nav, Buttons) */
     align-items: center;
-    justify-content: center; 
-    width: 100%; 
-    max-width: 1200px; 
-    white-space: nowrap;
+    margin: 0px 0px; /* Center the container on the page */
 }
 
-.logo {
-    margin-right: auto; 
-}
-
-.logo a {
-    text-decoration: none;
-}
-
+/* LOGO STYLES */
 .logo img {
-    max-width: auto;
-    height: 100px;
-    transform: none;
+    /* KEY CHANGE: Reduced the height to make the navbar thinner */
+    height: 40px; 
+    display: block; /* Removes any default inline spacing below the image */
 }
 
+/* MAIN NAVIGATION LINKS */
 .main-nav {
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-grow: 1;
-    white-space: nowrap;
+    justify-content: center; /* Center the links */
+    gap: 10px; /* Space between links */
 }
 
 .main-nav a {
     color: white;
     text-decoration: none;
-    padding: 15px 15px;
-    font-size: 15px;
-    font-weight: lighter;
-    margin: 10px 15px;
-    white-space: nowrap;
+    padding: 10px 15px; /* Padding for click area */
+    font-size: 16px;
+    font-weight: 500;
+    transition: color 0.3s;
 }
 
-.navbar button {
+.main-nav a:hover {
+    color: red; /* Highlight on hover */
+}
+
+/* AUTH BUTTONS */
+.auth-buttons {
+    display: flex;
+    gap: 15px; /* Space between the two buttons */
+}
+
+.signup-button,
+.login-button {
     background-color: red;
     color: white;
     border: none;
-    border-radius: 10px;
+    border-radius: 5px;
     height: 40px;
-    width: 100px;
-    margin-left: 50px;
+    padding: 0 15px;
     cursor: pointer;
-    transform: none;
-    white-space: nowrap;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.signup-button:hover,
+.login-button:hover {
+    background-color: darkred;
+}
+
+/* Ensure the body and page container cover the whole screen */
+.login-page {
+    /* Set the background for the entire login view */
+    background-color: #000000; 
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* The main container for the form */
+.login-card {
+    background-color: #1a1a1a; /* Dark gray card background */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 400px; /* Standard form width */
+    text-align: center;
+    color: white;
+}
+
+.login-card h2 {
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: white;
+    font-weight: 500;
+}
+
+/* Grouping for label and input */
+.form-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 300;
+    color: #ccc;
+}
+
+/* Input fields */
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    background-color: #0d0d0d;
+    color: white;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: red; /* Highlight on focus */
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+}
+
+/* Login Button */
+.login-button {
+    width: 100%;
+    padding: 15px;
+    background-color: red; /* Your signature color */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.login-button:hover {
+    background-color: darkred;
+}
+
+/* Links (Forgot Password/Sign Up) */
+.forgot-password a, .signup-link a {
+    color: red;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.forgot-password {
+    margin-top: 20px;
+}
+
+.signup-link {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #aaa;
 }

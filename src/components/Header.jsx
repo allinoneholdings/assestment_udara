@@ -12,14 +12,9 @@ export default function Header() {
         </div>
         <nav className="main-nav">
           <a href="/">Home</a>
-          <a href="#contact">Contact</a>
-          <a href="#about">About</a>
+          <a href="/about">About</a>
+          <a href="/login">Login</a>
         </nav>
-        <div className="auth-buttons">
-          <a href="/login">
-            <button className="login-button">Login</button>
-          </a>
-        </div>
       </div>
     </header>
   );

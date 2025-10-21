@@ -57,7 +57,6 @@ body {
     gap: 15px; 
 }
 
-.signup-button,
 .login-button {
     background-color: red;
     color: white;

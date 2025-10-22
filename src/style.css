@@ -445,19 +445,15 @@ footer p {
   color: white;
 }
 
+.user-table tr:hover td {
+  color: #000;
+}
+
 .user-table tr:hover {
   background-color: #f9f9f9;
-  transition: 0.3s;
-  color: black;
+  transition: background-color 0.3s;
 }
 
-.user-table td:hover {
-  color: black;
-}
-
-.user-table td {
-  color: white;
-}
 
 /* --- Delete Button --- */
 .delete-btn {

@@ -1,183 +1,426 @@
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0; 
+*{
     padding: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: #000000;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Josefin Sans', sans-serif;
+
 }
 
-
-.header {
-    background-color: #000000; 
-    border-bottom: 1px solid #333;
-    padding: 0 200px; 
+.hero{
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(../liquor-store.jpg);
+    background-size: cover;
+    background-position: center;
 }
 
-.navbar-container {
+nav{
     display: flex;
-    justify-content: space-between; 
     align-items: center;
-    margin: 0px 0px; 
+    justify-content: space-between;
+    padding-top: 40px;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
-
-.logo img {
-
-    height: 40px; 
-    display: block; 
+.logo{
+    color: white;
+    font-size: 28px;
 }
 
-
-.main-nav {
-    display: flex;
-    flex-grow: 1;
-    justify-content: center; 
-    gap: 10px; 
+span{
+    color: #ea158e;
 }
 
-.main-nav a {
+nav ul li {
+    list-style-type: none;
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+nav ul li a {
     color: white;
     text-decoration: none;
-    padding: 10px 15px; 
-    font-size: 16px;
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.main-nav a:hover {
-    color: red; 
-}
-
-
-.auth-buttons {
-    display: flex;
-    gap: 15px; 
-}
-
-.login-button {
-    background-color: rgb(85, 0, 255);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    height: 40px;
-    padding: 0 15px;
-    cursor: pointer;
     font-weight: bold;
-    transition: background-color 0.3s;
 }
 
-.signup-button:hover,
-.login-button:hover {
-    background-color: rgb(255, 0, 0);
+nav ul li a:hover {
+    color: #ea158e;
+    transition: .3s;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+
 }
 
-
-.login-page {
-    position: relative;
-    background-color: #000000; 
-    min-height: 100vh; 
-    display: flex;
-    justify-content: center; 
-    align-items: center; 
-    padding: 20px;
-    font-family: 'Roboto', sans-serif;
+button{
+    border: none;
+    background: #ea158e;
+    padding: 12px 30px;
+    border-radius: 30px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    transition: .4s;
 }
 
+button:hover{
+    cursor: pointer;
 
-.login-card {
-    background-color: #1a1a1a; 
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-    width: 100%;
-    max-width: 400px;
+}
+
+.hero-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
     text-align: center;
-    color: white;
 }
 
-.login-card h2 {
-    margin-bottom: 30px;
-    font-size: 28px;
-    color: white;
-    font-weight: 500;
-}
-
-
-.form-group {
-    text-align: left;
+.hero-text h1{
+    font-size: 50px;
     margin-bottom: 20px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 300;
-    color: #ccc;
-}
-
-
-.form-group input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #333;
-    border-radius: 6px;
-    background-color: #0d0d0d;
-    color: white;
-    font-size: 16px;
-    transition: border-color 0.3s;
-}
-
-.form-group input:focus {
-    border-color: red; 
-    outline: none;
-    box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
-}
-
-
-.login-button {
-    width: 100%;
-    padding: 15px;
-    background-color: red; 
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s;
-}
-
-.login-button:hover {
-    background-color: darkred;
-}
-
-.forgot-password a, .signup-link a {
-    color: red;
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.3s;
-}
-
-.forgot-password {
-    margin-top: 20px;
-}
-
-.signup-link {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #aaa;
+.hero-text p{
+    font-size: 20px;
+    margin-bottom: 30px;
 }
 
 footer {
-    background-color: black;
-    color: #9a9999;
-    padding: 20px 0;
-    text-align: center;
-    bottom: 0;
+    height: 60px;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 14px;
+}
+
+footer p {
+    margin-left: 10px;
+}
+
+.login-form {
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(../liquor-store.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.login-form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form-container h2 {
+    margin-bottom: 20px;
+}
+
+.login-form-container label {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+    text-align: left;
+    width: 300px;
+}
+
+.login-form-container input {
+    width: 300px;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+
+.login-form-container button {
+    width: 320px;
+    padding: 10px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    background: #ea158e;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    transition: .4s;
+}
+
+.login-form-container button:hover {
+    cursor: pointer;
+    background: #c0126b;
+}
+
+.about-us {
+    padding: 60px 20px;
+    color: #ffffff;
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(../liquor-store.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.about-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.montserrat-bold {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 2.5em;
+    color: #ffffff;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.montserrat-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.8em;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.montserrat-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.2em;
+    color: #ea158e;
+    margin-bottom: 10px;
+}
+
+.montserrat-cta {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 3em;
+    color: #ea158e; 
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.josefin-text, .josefin-text-lg {
+    font-family: 'Josefin Sans', sans-serif;
+    line-height: 1.6;
+    font-weight: 400;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.josefin-text-lg {
+    font-size: 1.15em;
+    font-weight: 300;
+    text-align: center;
+}
+
+.separator {
+    border: 0;
+    height: 1px;
+    background-color: #ddd;
+    margin: 40px auto;
+    width: 80%;
+}
+
+.about-story, .about-footer {
+    text-align: center;
+}
+
+.about-features {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+
+.feature-card {
+    flex-basis: calc(33.33% - 20px);
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #000000;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.about-footer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-top: 0;
+    margin-bottom: 10px;
+    padding-top: 30px;
+    border-top: 1px solid #ddd;
+}
+
+.search-bar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 25px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  color: white;
+  text-align: center;
+}
+
+.search-bar h2 {
+  margin-bottom: 20px;
+}
+
+/* Search row */
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.search-row label {
+  font-weight: 600;
+  color: white;
+}
+
+.search-row input {
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: none;
+  width: 425px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.search-row input:focus {
+  box-shadow: 0 0 5px #ea158e;
+  background: rgba(255,255,255,0.95);
+}
+
+.search-row button {
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 14px;
+  background: #ea158e;
+  color: white;
+  border: none;
+  transition: 0.3s;
+}
+
+.search-row button:hover {
+  background: #c0126b;
+  cursor: pointer;
+}
+
+/* Filter row styling */
+.filter-row {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-row select {
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  color: #000;
+  min-width: 160px;
+  outline: none;
+  transition: 0.3s;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.filter-row select:hover,
+.filter-row select:focus {
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(234,21,142,0.3);
+}
+
+.items-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.item-card {
+  padding: 5px;
+  background-color: #f5f5f5;
+  border: 1px solid #eee;
+  width: 200px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card:hover {
+  transform: translateY(-3px);
+}
+
+.item-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  color: #000;
+}
+
+.item-card p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #000;
+}
+
+@media (max-width: 992px) {
+    .feature-card {
+        flex-basis: calc(50% - 15px);
+    }
+}
+
+@media (max-width: 600px) {
+    .feature-card {
+        flex-basis: 100%;
+    }
+    
+    .montserrat-bold {
+        font-size: 2em;
+    }
+    
+    .montserrat-cta {
+        font-size: 2em;
+    }
 }

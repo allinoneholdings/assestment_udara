@@ -19,6 +19,7 @@ export default function Item () {
   const dummyItems = [
     { id: 1, name: "Classic Whiskey", quantity: 12, price: 45.99 },
     { id: 2, name: "Red Wine", quantity: 8, price: 30.5 },
+        { id: 3, name: "Sparkling Water", quantity: 20, price: 5.99 },
   ]; 
 
     return (

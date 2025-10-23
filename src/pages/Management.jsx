@@ -35,6 +35,7 @@ const confirmDelete = () => {
         birthday: "",
         joined: "",
         role: "",
+        password: "",
       });
 
         const handleAddItemChange = (e) => {
@@ -49,7 +50,7 @@ const confirmDelete = () => {
     setUsers([...users, { id: newId, ...newItem }]);
 
     // Reset form + close modal
-    setNewItem({ name: "", age: "", birthday: "", joined: "", role: "" });
+    setNewItem({ name: "", age: "", birthday: "", joined: "", role: "", password: "" });
     setShowModal(false);
   };
 
@@ -155,6 +156,15 @@ const confirmDelete = () => {
                   type="text"
                   name="role"
                   value={newItem.role}
+                  onChange={handleAddItemChange}
+                  required
+                />
+
+                <label>Password:</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={newItem.password}
                   onChange={handleAddItemChange}
                   required
                 />

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../style.css";
+import Footer from "../components/Footer.jsx";
 
 export default function Item() {
   // Search & Filters
@@ -239,6 +240,7 @@ export default function Item() {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import "../style.css";
 import { Link } from "react-router-dom";
+import Footer from "../components/Footer.jsx";
 
 export default function Admin() {
   return (
@@ -19,6 +20,7 @@ export default function Admin() {
           <button type="button">Logout</button>
         </Link>
       </nav>
+      <Footer />
     </div>
   );
 }

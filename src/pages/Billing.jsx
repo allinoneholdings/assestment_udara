@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../style.css";
+import Footer from "../components/Footer.jsx";
 
 export default function Billing() {
   // Search & Filters
@@ -327,6 +328,7 @@ const handleCheckout = () => {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 }

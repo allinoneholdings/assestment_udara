@@ -2,6 +2,7 @@ import React from "react";
 import "../style.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import Footer from "../components/Footer.jsx";
 
 export default function Management () {
 
@@ -182,8 +183,8 @@ const confirmDelete = () => {
     </div>
   </div>
 )}
+<Footer />
     </div>
-
     </>
     );
 }

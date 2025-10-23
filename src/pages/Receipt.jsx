@@ -2,6 +2,7 @@ import React from "react";
 import "../style.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import Footer from "../components/Footer.jsx";
 
 export default function Receipt () {
 
@@ -72,6 +73,7 @@ export default function Receipt () {
         </table>
       </div>
     </div>
+<Footer />
     </div>
     );
 }

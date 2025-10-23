@@ -5,24 +5,28 @@ import { useState } from "react";
 
 export default function Management () {
 
-  const [users, setUsers] = useState([
-    { id: 1, name: "John Doe", age: 28, birthday: "1997-05-10", joined: "2023-03-12", role: "Cashier" },
-    { id: 2, name: "Jane Smith", age: 32, birthday: "1993-11-20", joined: "2022-07-05", role: "Manager" },
-    { id: 3, name: "Mike Ross", age: 25, birthday: "2000-02-15", joined: "2024-01-18", role: "Assistant" },
-        { id: 1, name: "John Doe", age: 28, birthday: "1997-05-10", joined: "2023-03-12", role: "Cashier" },
-    { id: 2, name: "Jane Smith", age: 32, birthday: "1993-11-20", joined: "2022-07-05", role: "Manager" },
-    { id: 3, name: "Mike Ross", age: 25, birthday: "2000-02-15", joined: "2024-01-18", role: "Assistant" },
-        { id: 1, name: "John Doe", age: 28, birthday: "1997-05-10", joined: "2023-03-12", role: "Cashier" },
-    { id: 2, name: "Jane Smith", age: 32, birthday: "1993-11-20", joined: "2022-07-05", role: "Manager" },
-    { id: 3, name: "Mike Ross", age: 25, birthday: "2000-02-15", joined: "2024-01-18", role: "Assistant" },
-  ]);
+const [users, setUsers] = useState([
+  { id: 1, name: "John Doe", age: 28, birthday: "1997-05-10", joined: "2023-03-12", role: "Cashier" },
+  { id: 2, name: "Jane Smith", age: 32, birthday: "1993-11-20", joined: "2022-07-05", role: "Manager" },
+  { id: 3, name: "Mike Ross", age: 25, birthday: "2000-02-15", joined: "2024-01-18", role: "Assistant" },
+  { id: 4, name: "Alice Brown", age: 30, birthday: "1993-08-10", joined: "2022-05-20", role: "Supervisor" },
+  { id: 5, name: "Bob White", age: 27, birthday: "1996-12-05", joined: "2023-06-15", role: "Cashier" },
+]);
 
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
+
+const handleDelete = (user) => {
+  setDeleteModalItem(user); // open confirmation modal
+};
+
+const confirmDelete = () => {
+  setUsers(users.filter((u) => u.id !== deleteModalItem.id));
+  setDeleteModalItem(null);
+};
 
         // State for modal
     const [showModal, setShowModal] = useState(false);
+    const [deleteModalItem, setDeleteModalItem] = useState(null);
+
 
       const [newItem, setNewItem] = useState({
         name: "",
@@ -91,11 +95,8 @@ export default function Management () {
                 <td>{user.joined}</td>
                 <td>{user.role}</td>
                 <td>
-                  <button
-                    className="delete-btn"
-                    onClick={() => handleDelete(user.id)}
-                  >
-                    Delete
+                    <button className="delete-btn" onClick={() => handleDelete(user)}>
+                     Delete
                   </button>
                 </td>
               </tr>
@@ -167,6 +168,20 @@ export default function Management () {
             </div>
           </div>
         )}
+
+        {/* Delete Confirmation Modal */}
+{deleteModalItem && (
+  <div className="modal-overlay">
+    <div className="modal-content">
+      <h3>Delete User</h3>
+      <p>Are you sure you want to delete <strong>{deleteModalItem.name}</strong>?</p>
+      <div className="modal-buttons">
+        <button onClick={confirmDelete} style={{ background: "#e60000", color: "#fff" }}>Yes, Delete</button>
+        <button onClick={() => setDeleteModalItem(null)}>Cancel</button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
 
     </>

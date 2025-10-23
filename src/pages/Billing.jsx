@@ -61,6 +61,45 @@ export default function Billing() {
     setShowModal(false);
   };
 
+  const handleUpdateCartItem = (id) => {
+  const item = cart.find((c) => c.id === id);
+  if (!item) return;
+
+  // Ask user for new quantity (you can later replace with a proper modal)
+  const newQty = parseInt(prompt(`Update quantity for ${item.name}:`, item.quantity));
+  if (!newQty || newQty <= 0) return;
+
+  const stockItem = users.find((u) => u.id === id);
+  const unitPrice = Math.round(stockItem.price / stockItem.quantity);
+
+  // Update cart
+  const updatedCart = cart.map((c) =>
+    c.id === id ? { ...c, quantity: newQty, totalPrice: unitPrice * newQty } : c
+  );
+  setCart(updatedCart);
+
+  // Also update billing quantity state
+  setBillingQuantities({ ...billingQuantities, [id]: newQty });
+};
+
+const handleCheckout = () => {
+  if (cart.length === 0) return alert("Cart is empty!");
+
+  // Update stock quantities
+  const updatedUsers = users.map((u) => {
+    const cartItem = cart.find((c) => c.id === u.id);
+    if (cartItem) {
+      return { ...u, quantity: u.quantity - cartItem.quantity };
+    }
+    return u;
+  });
+
+  setUsers(updatedUsers);
+  setCart([]);
+  alert("Checkout successful!");
+};
+
+
   // Filter items based on search and dropdown
   const filteredUsers = users.filter((user) => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -252,16 +291,17 @@ export default function Billing() {
                     <td>{item.quantity}</td>
                     <td>{item.totalPrice.toLocaleString()}</td>
                     <td>
-                      <button className="delete-btn" onClick={() => handleRemoveCartItem(item.id)}>Delete</button>
-                      <button className="delete-btn" onClick={() => handleUpdateCartItem(item.id)}>Update</button>
+                        <button className="delete-btn" onClick={() => handleRemoveCartItem(item.id)}>Delete</button>
+                        <button className="delete-btn" onClick={() => handleUpdateCartItem(item.id)}>Update</button>
                     </td>
+
                   </tr>
                 ))}
               </tbody>
             </table>
             <div style={{ marginTop: "15px", color: "white", textAlign: "right", fontWeight: "bold" }}>
               Total Items: {totalItems} | Total Price: {totalPrice.toLocaleString()} LKR
-              <button style={{ marginLeft: "20px" }}>Checkout</button>
+              <button style={{ marginLeft: "20px" }} onClick={handleCheckout}>Checkout</button>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import "../style.css";
+import Footer from "../components/Footer";
 
 export default function About (){
     return (
@@ -43,6 +44,11 @@ export default function About (){
                     </div>
                 </div>
             </div>
+
+                <div className="about-footer">
+                    <Footer className="static-footer" />
+            </div>
+
         </section>
 
     );

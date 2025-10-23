@@ -14,7 +14,6 @@ const [users, setUsers] = useState([
   { id: 5, name: "Bob White", age: 27, birthday: "1996-12-05", joined: "2023-06-15", role: "Cashier" },
 ]);
 
-
 const handleDelete = (user) => {
   setDeleteModalItem(user); // open confirmation modal
 };

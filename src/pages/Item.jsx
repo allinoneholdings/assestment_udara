@@ -1,118 +1,189 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style.css";
 import Footer from "../components/Footer.jsx";
 
 export default function Item() {
+
+  const API_URL = "http://localhost:5000/api/items";
+
   // Search & Filters
   const [searchTerm, setSearchTerm] = useState("");
   const [filterName, setFilterName] = useState("");
   const [filterQuantity, setFilterQuantity] = useState("");
   const [filterPrice, setFilterPrice] = useState("");
 
-  // Items
-  const [users, setUsers] = useState([
-    { id: 1, name: "Jack Daniel’s Old No.7 750ml", quantity: 20, price: 12500 },
-    { id: 2, name: "Johnnie Walker Black Label 750ml", quantity: 15, price: 15000 },
-    { id: 3, name: "Chivas Regal 12 Years 700ml", quantity: 12, price: 16500 },
-    { id: 4, name: "Absolut Vodka 1L", quantity: 25, price: 10000 },
-    { id: 5, name: "Smirnoff Vodka 750ml", quantity: 30, price: 7800 },
-    { id: 6, name: "Bacardi White Rum 750ml", quantity: 18, price: 8500 },
-    { id: 7, name: "Captain Morgan Spiced Rum 750ml", quantity: 22, price: 9200 },
-    { id: 8, name: "Jose Cuervo Tequila 750ml", quantity: 10, price: 11800 },
-    { id: 9, name: "Baileys Irish Cream 750ml", quantity: 8, price: 13000 },
-    { id: 10, name: "Heineken Beer 330ml (24 Pack)", quantity: 35, price: 9000 },
-  ]);
-
   // Modal for adding item
+  const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newItem, setNewItem] = useState({ name: "", quantity: "", price: "" });
   const [isEditMode, setIsEditMode] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [deleteModalItem, setDeleteModalItem] = useState(null);
+  const [toast, setToast] = useState(null);
 
+// Fetch items from backend
+  const fetchItems = async () => {
+    try {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      // normalize to frontend fields: id, name, quantity, price, createdAt, _id
+      const norm = data.map((d) => ({
+        id: d._id,
+        _id: d._id,
+        name: d.itemName,
+        quantity: d.quantity,
+        price: d.price,
+        createdAt: d.createdAt,
+      }));
+      setItems(norm);
+    } catch (err) {
+      console.error("Fetch items error:", err);
+      showToast("error", "Failed to fetch items");
+    }
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  // small toast helper
+  const showToast = (type, text) => {
+    setToast({ type, text });
+    setTimeout(() => setToast(null), 3000);
+  };
+
+  // input change
   const handleAddItemChange = (e) => {
     setNewItem({ ...newItem, [e.target.name]: e.target.value });
   };
 
-  const handleAddItemSubmit = (e) => {
+  // submit add or update
+  const handleAddItemSubmit = async (e) => {
     e.preventDefault();
 
-    if (isEditMode) {
-      // Update existing item
-      setUsers(
-        users.map((user) =>
-          user.id === editItem.id
-            ? {
-                ...user,
-                name: newItem.name,
-                quantity: Number(newItem.quantity),
-                price: Number(newItem.price),
-              }
-            : user
-        )
-      );
+    const payload = {
+      itemName: newItem.name,
+      quantity: Number(newItem.quantity),
+      price: Number(newItem.price),
+    };
+
+    try {
+      if (isEditMode && editItem) {
+        // PUT /api/items/:id
+        const res = await fetch(`${API_URL}/${editItem._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const updated = await res.json();
+        if (!res.ok) throw new Error(updated.message || "Failed to update");
+
+        // update local list
+        setItems((prev) =>
+          prev.map((it) => (it._id === updated._id ? {
+            ...it,
+            name: updated.itemName,
+            quantity: updated.quantity,
+            price: updated.price,
+            createdAt: updated.createdAt,
+          } : it))
+        );
+
+        showToast("success", `Updated: ${updated.itemName}`);
+      } else {
+        // POST /api/items
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const created = await res.json();
+        if (!res.ok) throw new Error(created.message || "Failed to create");
+
+        // add to local list
+        setItems((prev) => [
+          {
+            id: created._id,
+            _id: created._id,
+            name: created.itemName,
+            quantity: created.quantity,
+            price: created.price,
+            createdAt: created.createdAt,
+          },
+          ...prev,
+        ]);
+
+        showToast("success", `Added: ${created.itemName}`);
+      }
+
+      // reset modal
+      setNewItem({ name: "", quantity: "", price: "" });
       setIsEditMode(false);
       setEditItem(null);
-    } else {
-      // Add new item
-      const newId = users.length + 1;
-      setUsers([
-        ...users,
-        { id: newId, name: newItem.name, quantity: Number(newItem.quantity), price: Number(newItem.price) },
-      ]);
+      setShowModal(false);
+    } catch (err) {
+      console.error(err);
+      showToast("error", err.message || "Error saving item");
     }
-
-    setNewItem({ name: "", quantity: "", price: "" });
-    setShowModal(false);
   };
 
-  const handleDelete = (id) => {
-    const item = users.find((u) => u.id === id);
+  // prepare delete modal
+  const handleDelete = (item) => {
     setDeleteModalItem(item);
   };
 
-  const confirmDelete = () => {
-    setUsers(users.filter((u) => u.id !== deleteModalItem.id));
-    setDeleteModalItem(null);
+  // confirm delete
+  const confirmDelete = async () => {
+    try {
+      const res = await fetch(`${API_URL}/${deleteModalItem._id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to delete");
+
+      setItems((prev) => prev.filter((i) => i._id !== deleteModalItem._id));
+      showToast("success", `Deleted: ${deleteModalItem.name}`);
+      setDeleteModalItem(null);
+    } catch (err) {
+      console.error(err);
+      showToast("error", err.message || "Delete failed");
+    }
   };
 
-  const handleUpdate = (id) => {
-    const itemToEdit = users.find((u) => u.id === id);
-    setEditItem(itemToEdit);
-    setNewItem({
-      name: itemToEdit.name,
-      quantity: itemToEdit.quantity,
-      price: itemToEdit.price,
-    });
+  // edit flow
+  const handleUpdate = (item) => {
+    setEditItem(item);
+    setNewItem({ name: item.name, quantity: item.quantity, price: item.price });
     setIsEditMode(true);
     setShowModal(true);
   };
 
-  // Filter items based on search and dropdown
-  const filteredUsers = users.filter((user) => {
-    // Search by name
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase());
+  // Filters / search
+  const uniqueNames = Array.from(new Set(items.map((i) => i.name))).sort();
 
-    // Filter by Name
-    const matchesName = filterName ? user.name === filterName : true;
+  const filteredItems = items.filter((item) => {
+    // search text by name
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
 
-    // Filter by Quantity
+    // name dropdown
+    const matchesName = filterName ? item.name === filterName : true;
+
+    // quantity ranges
     let matchesQuantity = true;
     if (filterQuantity) {
-      if (filterQuantity === "5-10") matchesQuantity = user.quantity >= 5 && user.quantity <= 10;
-      if (filterQuantity === "11-20") matchesQuantity = user.quantity >= 11 && user.quantity <= 20;
-      if (filterQuantity === "21-30") matchesQuantity = user.quantity >= 21 && user.quantity <= 30;
-      if (filterQuantity === "31+") matchesQuantity = user.quantity >= 31;
+      if (filterQuantity === "5-10") matchesQuantity = item.quantity >= 5 && item.quantity <= 10;
+      if (filterQuantity === "11-20") matchesQuantity = item.quantity >= 11 && item.quantity <= 20;
+      if (filterQuantity === "21-30") matchesQuantity = item.quantity >= 21 && item.quantity <= 30;
+      if (filterQuantity === "31+") matchesQuantity = item.quantity >= 31;
     }
 
-    // Filter by Price
+    // price ranges
     let matchesPrice = true;
     if (filterPrice) {
-      if (filterPrice === "0-9000") matchesPrice = user.price <= 9000;
-      if (filterPrice === "9001-12000") matchesPrice = user.price >= 9001 && user.price <= 12000;
-      if (filterPrice === "12001-15000") matchesPrice = user.price >= 12001 && user.price <= 15000;
-      if (filterPrice === "15001+") matchesPrice = user.price >= 15001;
+      if (filterPrice === "0-9000") matchesPrice = item.price <= 9000;
+      if (filterPrice === "9001-12000") matchesPrice = item.price >= 9001 && item.price <= 12000;
+      if (filterPrice === "12001-15000") matchesPrice = item.price >= 12001 && item.price <= 15000;
+      if (filterPrice === "15001+") matchesPrice = item.price >= 15001;
     }
 
     return matchesSearch && matchesName && matchesQuantity && matchesPrice;
@@ -133,6 +204,13 @@ export default function Item() {
         <Link to="/"><button type="button">Logout</button></Link>
       </nav>
 
+            {/* Toast */}
+      {toast && (
+        <div className={`toast ${toast.type === "success" ? "success" : "error"}`}>
+          {toast.type === "success" ? "✅" : "❌"} {toast.text}
+        </div>
+      )}
+
       <div className="search-section">
         <div className="search-bar">
           <div className="search-row">
@@ -142,25 +220,18 @@ export default function Item() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button type="button" onClick={() => setShowModal(true)}>Add</button>
+            <button type="button" onClick={() => { setShowModal(true); setIsEditMode(false); setNewItem({ name: "", quantity: "", price: "" }); }}>
+              Add
+            </button>
           </div>
 
           <div className="filter-row">
-            <select onChange={(e) => setFilterName(e.target.value)}>
+            <select onChange={(e) => setFilterName(e.target.value)} value={filterName}>
               <option value="">Name</option>
-              <option value="Jack Daniel’s Old No.7 750ml">Jack Daniel</option>
-              <option value="Johnnie Walker Black Label 750ml">Johnnie Walker</option>
-              <option value="Chivas Regal 12 Years 700ml">Chivas Regal</option>
-              <option value="Absolut Vodka 1L">Absolut Vodka</option>
-              <option value="Smirnoff Vodka 750ml">Smirnoff Vodka</option>
-              <option value="Bacardi White Rum 750ml">Bacardi Rum</option>
-              <option value="Captain Morgan Spiced Rum 750ml">Captain Morgan</option>
-              <option value="Jose Cuervo Tequila 750ml">Jose Cuervo</option>
-              <option value="Baileys Irish Cream 750ml">Baileys</option>
-              <option value="Heineken Beer 330ml (24 Pack)">Heineken</option>
+              {uniqueNames.map((n) => <option key={n} value={n}>{n}</option>)}
             </select>
 
-            <select onChange={(e) => setFilterQuantity(e.target.value)}>
+            <select onChange={(e) => setFilterQuantity(e.target.value)} value={filterQuantity}>
               <option value="">Quantity</option>
               <option value="5-10">5 – 10</option>
               <option value="11-20">11 – 20</option>
@@ -168,7 +239,7 @@ export default function Item() {
               <option value="31+">31+</option>
             </select>
 
-            <select onChange={(e) => setFilterPrice(e.target.value)}>
+            <select onChange={(e) => setFilterPrice(e.target.value)} value={filterPrice}>
               <option value="">Price</option>
               <option value="0-9000">Below 9,000 LKR</option>
               <option value="9001-12000">9,001 – 12,000 LKR</option>
@@ -186,27 +257,31 @@ export default function Item() {
               <tr>
                 <th>Name</th>
                 <th>Quantity</th>
-                <th>Price</th>
+                <th>Price (LKR)</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.name}</td>
-                  <td>{user.quantity}</td>
-                  <td>{user.price.toLocaleString()}</td>
+              {filteredItems.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.name}</td>
+                  <td>{item.quantity}</td>
+                  <td>{item.price.toLocaleString()}</td>
                   <td>
-                    <button className="delete-btn" onClick={() => handleDelete(user.id)}>Delete</button>
-                    <button className="delete-btn" onClick={() => handleUpdate(user.id)}>Update</button>
+                    <button className="delete-btn" onClick={() => handleDelete(item)}>Delete</button>
+                    <button className="delete-btn" onClick={() => handleUpdate(item)}>Update</button>
                   </td>
                 </tr>
               ))}
+              {filteredItems.length === 0 && (
+                <tr><td colSpan="4" style={{ color: "#fff" }}>No items found.</td></tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
+      {/* Add / Edit Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -221,20 +296,21 @@ export default function Item() {
 
               <div className="modal-buttons">
                 <button type="submit">{isEditMode ? "Update" : "Add Item"}</button>
-                <button type="button" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="button" onClick={() => { setShowModal(false); setIsEditMode(false); setEditItem(null); }}>Cancel</button>
               </div>
             </form>
           </div>
         </div>
       )}
 
+      {/* Delete Confirmation */}
       {deleteModalItem && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Delete Item</h3>
             <p>Are you sure you want to delete ?<strong>{deleteModalItem.name}</strong></p>
             <div className="modal-buttons">
-              <button onClick={confirmDelete} style={{background: "#e60000", color: "#fff"}}>Yes, Delete</button>
+              <button onClick={confirmDelete} style={{ background: "#e60000", color: "#fff" }}>Yes, Delete</button>
               <button onClick={() => setDeleteModalItem(null)}>Cancel</button>
             </div>
           </div>

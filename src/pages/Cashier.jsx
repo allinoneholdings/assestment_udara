@@ -127,6 +127,7 @@ export default function Item() {
         <ul>
           <li><a href="/items">Items</a></li>
           <li><a href="/billing">Billing</a></li>
+          <li><a href="/management">Manage</a></li>
           <li><a href="/receipt">Receipt</a></li>
         </ul>
         <Link to="/"><button type="button">Logout</button></Link>

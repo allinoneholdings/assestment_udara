@@ -1,110 +1,247 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style.css";
 import Footer from "../components/Footer.jsx";
 
 export default function Billing() {
+
+  const API_BASE = "http://localhost:5000/api";
+  const API_ITEMS = `${API_BASE}/items`;
+  const API_BILLING = `${API_BASE}/billing`;
+
+    // Items from backend
+  const [items, setItems] = useState([]);
+  const [loadingItems, setLoadingItems] = useState(false);
+  
   // Search & Filters
   const [searchTerm, setSearchTerm] = useState("");
   const [filterName, setFilterName] = useState("");
   const [filterQuantity, setFilterQuantity] = useState("");
   const [filterPrice, setFilterPrice] = useState("");
 
-  // Items (stocks)
-  const [users, setUsers] = useState([
-    { id: 1, name: "Jack Daniel’s Old No.7 750ml", quantity: 20, price: 12500 },
-    { id: 2, name: "Johnnie Walker Black Label 750ml", quantity: 15, price: 15000 },
-    { id: 3, name: "Chivas Regal 12 Years 700ml", quantity: 12, price: 16500 },
-    { id: 4, name: "Absolut Vodka 1L", quantity: 25, price: 10000 },
-    { id: 5, name: "Smirnoff Vodka 750ml", quantity: 30, price: 7800 },
-    { id: 6, name: "Bacardi White Rum 750ml", quantity: 18, price: 8500 },
-    { id: 7, name: "Captain Morgan Spiced Rum 750ml", quantity: 22, price: 9200 },
-    { id: 8, name: "Jose Cuervo Tequila 750ml", quantity: 10, price: 11800 },
-    { id: 9, name: "Baileys Irish Cream 750ml", quantity: 8, price: 13000 },
-    { id: 10, name: "Heineken Beer 330ml (24 Pack)", quantity: 35, price: 9000 },
-  ]);
+  // Billing (in-memory)
+  // cart: [{ id: itemId, name, unitPrice, quantity, totalPrice }]
+  const [cart, setCart] = useState(() => {
+    try {
+      const raw = sessionStorage.getItem("billing_cart");
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  });
 
-  // Billing quantities state (starts at 1)
-  const [billingQuantities, setBillingQuantities] = useState(
-    users.reduce((acc, user) => ({ ...acc, [user.id]: 1 }), {})
-  );
+  // per-row billing quantities (for the item list controls)
+  const [billingQuantities, setBillingQuantities] = useState(() => {
+    try {
+      const raw = sessionStorage.getItem("billing_quantities");
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      return {};
+    }
+  });
 
-  // Selected/Cart items
-  const [cart, setCart] = useState([]);
+  const [toast, setToast] = useState(null);
+  const [showCheckoutProcessing, setShowCheckoutProcessing] = useState(false);
 
-  // Modal for adding item
-  const [showModal, setShowModal] = useState(false);
-  const [newItem, setNewItem] = useState({ name: "", quantity: "", price: "" });
+  // fetch items
+  const fetchItems = async () => {
+    setLoadingItems(true);
+    try {
+      const res = await fetch(API_ITEMS);
+      const data = await res.json();
+      // normalize: use { id: _id, itemName, quantity, price }
+      const norm = data.map(d => ({
+        id: d._id,
+        itemName: d.itemName,
+        quantity: d.quantity,
+        price: d.price,
+        createdAt: d.createdAt
+      }));
+      setItems(norm);
 
-  const handleAddItemChange = (e) => {
-    setNewItem({ ...newItem, [e.target.name]: e.target.value });
+      // ensure billingQuantities has a default for each item (1)
+      setBillingQuantities(prev => {
+        const copy = { ...prev };
+        norm.forEach(i => {
+          if (copy[i.id] == null) copy[i.id] = 1;
+        });
+        sessionStorage.setItem("billing_quantities", JSON.stringify(copy));
+        return copy;
+      });
+    } catch (err) {
+      console.error("Failed to fetch items", err);
+      showToast("error", "Failed to load items");
+    } finally {
+      setLoadingItems(false);
+    }
   };
 
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-    const copyQuantities = { ...billingQuantities };
-    delete copyQuantities[id];
-    setBillingQuantities(copyQuantities);
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  // keep cart & billingQuantities in sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem("billing_cart", JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    sessionStorage.setItem("billing_quantities", JSON.stringify(billingQuantities));
+  }, [billingQuantities]);
+
+  // small toast helper
+  const showToast = (type, text) => {
+    setToast({ type, text });
+    setTimeout(() => setToast(null), 3000);
   };
 
-  const handleAddItemSubmit = (e) => {
-    e.preventDefault();
-    const newId = users.length + 1;
-    const item = {
-      id: newId,
-      name: newItem.name,
-      quantity: Number(newItem.quantity),
-      price: Number(newItem.price),
-    };
-    setUsers([...users, item]);
-    setBillingQuantities({ ...billingQuantities, [newId]: 1 });
-    setNewItem({ name: "", quantity: "", price: "" });
-    setShowModal(false);
+  // Derived values
+  const totalItems = cart.reduce((s, it) => s + it.quantity, 0);
+  const totalPrice = cart.reduce((s, it) => s + it.totalPrice, 0);
+
+  // Handlers
+  const updateBillingQty = (itemId, newQty) => {
+    if (newQty < 1) return;
+    setBillingQuantities(prev => {
+      const copy = { ...prev, [itemId]: newQty };
+      return copy;
+    });
+  };
+
+  // Add to cart or update existing cart item (only in memory)
+  const handleBuy = (item) => {
+    const unitPrice = item.price; // keep behaviour consistent
+    const qty = billingQuantities[item.id] || 1;
+
+    // Validate qty relative to stock
+    if (qty > item.quantity) {
+      showToast("error", `Requested ${qty} exceeds stock ${item.quantity}`);
+      return;
+    }
+
+    setCart(prev => {
+      const idx = prev.findIndex(p => p.id === item.id);
+      if (idx >= 0) {
+        const copy = [...prev];
+        copy[idx] = {
+          ...copy[idx],
+          quantity: qty,
+          totalPrice: unitPrice * qty
+        };
+        return copy;
+      } else {
+        return [
+          ...prev,
+          { id: item.id, name: item.itemName, unitPrice, quantity: qty, totalPrice: unitPrice * qty }
+        ];
+      }
+    });
+    showToast("success", `Added to cart: ${item.itemName} x${qty}`);
+  };
+
+  const handleRemoveCartItem = (id) => {
+    setCart(prev => prev.filter(i => i.id !== id));
+    showToast("success", "Removed from cart");
   };
 
   const handleUpdateCartItem = (id) => {
-  const item = cart.find((c) => c.id === id);
-  if (!item) return;
+    const existing = cart.find(c => c.id === id);
+    if (!existing) return;
+    // simple prompt update (keeps parity with your previous flow), but uses in-memory only
+    const str = prompt(`Update quantity for ${existing.name}:`, existing.quantity);
+    if (!str) return;
+    const newQty = parseInt(str, 10);
+    if (isNaN(newQty) || newQty <= 0) return showToast("error", "Invalid quantity");
 
-  // Ask user for new quantity (you can later replace with a proper modal)
-  const newQty = parseInt(prompt(`Update quantity for ${item.name}:`, item.quantity));
-  if (!newQty || newQty <= 0) return;
-
-  const stockItem = users.find((u) => u.id === id);
-  const unitPrice = Math.round(stockItem.price / stockItem.quantity);
-
-  // Update cart
-  const updatedCart = cart.map((c) =>
-    c.id === id ? { ...c, quantity: newQty, totalPrice: unitPrice * newQty } : c
-  );
-  setCart(updatedCart);
-
-  // Also update billing quantity state
-  setBillingQuantities({ ...billingQuantities, [id]: newQty });
-};
-
-const handleCheckout = () => {
-  if (cart.length === 0) return alert("Cart is empty!");
-
-  // Update stock quantities
-  const updatedUsers = users.map((u) => {
-    const cartItem = cart.find((c) => c.id === u.id);
-    if (cartItem) {
-      return { ...u, quantity: u.quantity - cartItem.quantity };
+    // Check stock
+    const stock = items.find(i => i.id === id);
+    if (stock && newQty > stock.quantity) {
+      return showToast("error", `Requested ${newQty} exceeds stock ${stock.quantity}`);
     }
-    return u;
-  });
 
-  setUsers(updatedUsers);
-  setCart([]);
-  alert("Checkout successful!");
-};
+    setCart(prev => prev.map(c => c.id === id ? { ...c, quantity: newQty, totalPrice: c.unitPrice * newQty } : c));
+    setBillingQuantities(prev => ({ ...prev, [id]: newQty }));
+    showToast("success", "Cart updated");
+  };
 
+  // Checkout: call backend to create billing and update item stocks atomically (if possible)
+  const handleCheckout = async () => {
+    if (cart.length === 0) return showToast("error", "Cart is empty");
+    setShowCheckoutProcessing(true);
 
-  // Filter items based on search and dropdown
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesName = filterName ? user.name === filterName : true;
+    const payload = {
+      items: cart.map(c => ({
+        itemId: c.id,
+        itemName: c.name,
+        unitPrice: c.unitPrice,
+        quantity: c.quantity,
+        totalPrice: c.totalPrice
+      })),
+      totalAmount: totalPrice
+    };
+
+    try {
+      const res = await fetch(API_BILLING, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        // show detailed errors if provided
+        if (data && data.errors) {
+          const first = data.errors[0];
+          showToast("error", `Stock issue: ${first.itemName || first.itemId || ""} (available ${first.available || first.reason || "?"})`);
+        } else {
+          showToast("error", data.message || "Checkout failed");
+        }
+        setShowCheckoutProcessing(false);
+        return;
+      }
+
+      // Success — clear cart and refresh items
+      showToast("success", "Checkout successful");
+      setCart([]);
+      setBillingQuantities({});
+      sessionStorage.removeItem("billing_cart");
+      sessionStorage.removeItem("billing_quantities");
+
+      // Re-fetch items to get updated stocks
+      await fetchItemsAfterCheckout();
+    } catch (err) {
+      console.error("Checkout error:", err);
+      showToast("error", "Checkout failed");
+    } finally {
+      setShowCheckoutProcessing(false);
+    }
+  };
+
+  // Helper to re-fetch items after checkout
+  const fetchItemsAfterCheckout = async () => {
+    try {
+      const res = await fetch(API_ITEMS);
+      const data = await res.json();
+      const norm = data.map(d => ({
+        id: d._id,
+        itemName: d.itemName,
+        quantity: d.quantity,
+        price: d.price,
+        createdAt: d.createdAt
+      }));
+      setItems(norm);
+    } catch (err) {
+      console.error("Failed to refresh items", err);
+      showToast("error", "Failed to refresh items");
+    }
+  };
+
+  // Filters & search
+  const uniqueNames = Array.from(new Set(items.map(i => i.itemName))).sort();
+
+  const filteredUsers = items.filter((user) => {
+    const matchesSearch = user.itemName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesName = filterName ? user.itemName === filterName : true;
 
     let matchesQuantity = true;
     if (filterQuantity) {
@@ -125,40 +262,6 @@ const handleCheckout = () => {
     return matchesSearch && matchesName && matchesQuantity && matchesPrice;
   });
 
-
-    // Handle adding item to cart
-  const handleBuy = (user) => {
-    const unitPrice = Math.round(user.price / user.quantity);
-    const selectedQuantity = billingQuantities[user.id];
-
-    const existingIndex = cart.findIndex((item) => item.id === user.id);
-    if (existingIndex >= 0) {
-      const updatedCart = [...cart];
-      updatedCart[existingIndex].quantity = selectedQuantity;
-      updatedCart[existingIndex].totalPrice = unitPrice * selectedQuantity;
-      setCart(updatedCart);
-    } else {
-      setCart([
-        ...cart,
-        {
-          id: user.id,
-          name: user.name,
-          quantity: selectedQuantity,
-          totalPrice: unitPrice * selectedQuantity,
-        },
-      ]);
-    }
-  };
-
-  // Remove item from cart
-  const handleRemoveCartItem = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
-  };
-
-  // Total items & price
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const totalPrice = cart.reduce((acc, item) => acc + item.totalPrice, 0);
-
   return (
     <div className="hero">
       <nav>
@@ -172,6 +275,13 @@ const handleCheckout = () => {
         <Link to="/logout"><button type="button">Logout</button></Link>
       </nav>
 
+            {/* Toast */}
+      {toast && (
+        <div className={`toast ${toast.type === "success" ? "success" : "error"}`}>
+          {toast.type === "success" ? "✅" : "❌"} {toast.text}
+        </div>
+      )}
+
       <div className="main-section">
       <div className="search-section">
         <div className="search-bar">
@@ -182,37 +292,32 @@ const handleCheckout = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <button type="button" onClick={() => setShowModal(true)}>Add</button>
           </div>
 
-          <div className="filter-row">
-            <select onChange={(e) => setFilterName(e.target.value)}>
-              <option value="">Name</option>
-              {users.map(user => (
-                <option key={user.id} value={user.name}>
-                  {user.name.split(" ")[0]} {/* Short version */}
-                </option>
-              ))}
-            </select>
+            <div className="filter-row">
+              <select onChange={(e) => setFilterName(e.target.value)} value={filterName}>
+                <option value="">Name</option>
+                {uniqueNames.map(n => <option key={n} value={n}>{n}</option>)}
+              </select>
 
-            <select onChange={(e) => setFilterQuantity(e.target.value)}>
-              <option value="">Quantity</option>
-              <option value="5-10">5 – 10</option>
-              <option value="11-20">11 – 20</option>
-              <option value="21-30">21 – 30</option>
-              <option value="31+">31+</option>
-            </select>
+              <select onChange={(e) => setFilterQuantity(e.target.value)} value={filterQuantity}>
+                <option value="">Quantity</option>
+                <option value="5-10">5 – 10</option>
+                <option value="11-20">11 – 20</option>
+                <option value="21-30">21 – 30</option>
+                <option value="31+">31+</option>
+              </select>
 
-            <select onChange={(e) => setFilterPrice(e.target.value)}>
-              <option value="">Price</option>
-              <option value="0-9000">Below 9,000 LKR</option>
-              <option value="9001-12000">9,001 – 12,000 LKR</option>
-              <option value="12001-15000">12,001 – 15,000 LKR</option>
-              <option value="15001+">Above 15,000 LKR</option>
-            </select>
+              <select onChange={(e) => setFilterPrice(e.target.value)} value={filterPrice}>
+                <option value="">Price</option>
+                <option value="0-9000">Below 9,000 LKR</option>
+                <option value="9001-12000">9,001 – 12,000 LKR</option>
+                <option value="12001-15000">12,001 – 15,000 LKR</option>
+                <option value="15001+">Above 15,000 LKR</option>
+              </select>
+            </div>
           </div>
         </div>
-      </div>
 
       <div className="table-containers">
         <div className="table-scroll">
@@ -222,109 +327,77 @@ const handleCheckout = () => {
                 <th>Name</th>
                 <th>Stocks</th>
                 <th>Quantity</th>
-                <th>Price</th>
+                <th>Price (LKR)</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => {
-                const stockQuantity = user.quantity;
-                const unitPrice = Math.round(user.price / stockQuantity);
-                const billingQuantity = billingQuantities[user.id];
-                const billingPrice = unitPrice * billingQuantity;
+                {filteredUsers.map((user) => {
+                  const stockQuantity = user.quantity;
+                  const unitPrice = user.price;
+                  const billingQuantity = billingQuantities[user.id] || 1;
+                  const billingPrice = unitPrice * billingQuantity;
 
-                return (
-                  <tr key={user.id}>
-                    <td>{user.name}</td>
-                    <td>{stockQuantity}</td>
-                    <td>
-                      <div className="quantity-controls">
-                        <button
-                          onClick={() => {
-                            if (billingQuantity > 1)
-                              setBillingQuantities({ ...billingQuantities, [user.id]: billingQuantity - 1 });
-                          }}
-                        >
-                          -
-                        </button>
-                        <span>{billingQuantity}</span>
-                        <button
-                          onClick={() => {
-                            if (billingQuantity < stockQuantity)
-                              setBillingQuantities({ ...billingQuantities, [user.id]: billingQuantity + 1 });
-                          }}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </td>
-                    <td>{billingPrice.toLocaleString()}</td>
-                    <td>
+                  return (
+                    <tr key={user.id}>
+                      <td>{user.itemName}</td>
+                      <td>{stockQuantity}</td>
+                      <td>
+                        <div className="quantity-controls">
+                          <button onClick={() => updateBillingQty(user.id, Math.max(1, billingQuantity - 1))}>-</button>
+                          <span>{billingQuantity}</span>
+                          <button onClick={() => updateBillingQty(user.id, Math.min(stockQuantity, billingQuantity + 1))}>+</button>
+                        </div>
+                      </td>
+                      <td>{billingPrice.toLocaleString()}</td>
+                      <td>
                         <button className="delete-btn" onClick={() => handleBuy(user)}>Buy</button>
-                    </td>
-                  </tr>
-                );
+                      </td>
+                    </tr>
+                  );
               })}
+              {filteredUsers.length === 0 && <tr><td colSpan="5" style={{ color: "#fff" }}>No items found.</td></tr>}
             </tbody>
           </table>
         </div>
       </div>
       </div>
 
-            {/* Cart Section */}
-      {cart.length > 0 && (
+        {/* Cart Section */}
+        {cart.length > 0 && (
           <div className="cart-section">
-          <h2 style={{ color: "white", marginBottom: "15px" }}>Selected Items</h2>
-          <div className="table-scroll">
-            <table className="user-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Quantity</th>
-                  <th>Total Price</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cart.map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.name}</td>
-                    <td>{item.quantity}</td>
-                    <td>{item.totalPrice.toLocaleString()}</td>
-                    <td>
+            <h2 style={{ color: "white", marginBottom: "15px" }}>Selected Items (Pending)</h2>
+            <div className="table-scroll">
+              <table className="user-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cart.map(item => (
+                    <tr key={item.id}>
+                      <td>{item.name}</td>
+                      <td>{item.quantity}</td>
+                      <td>{item.totalPrice.toLocaleString()}</td>
+                      <td>
                         <button className="delete-btn" onClick={() => handleRemoveCartItem(item.id)}>Delete</button>
                         <button className="delete-btn" onClick={() => handleUpdateCartItem(item.id)}>Update</button>
-                    </td>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-                  </tr>
-                ))}
-              </tbody>
-            </table>
             <div style={{ marginTop: "15px", color: "white", textAlign: "right", fontWeight: "bold" }}>
               Total Items: {totalItems} | Total Price: {totalPrice.toLocaleString()} LKR
-              <button style={{ marginLeft: "20px" }} onClick={handleCheckout}>Checkout</button>
+              <button style={{ marginLeft: "20px" }} disabled={showCheckoutProcessing} onClick={handleCheckout}>
+                {showCheckoutProcessing ? "Processing..." : "Checkout"}
+              </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Add New Item</h3>
-            <form onSubmit={handleAddItemSubmit} className="add-item-form">
-              <label>Name:</label>
-              <input type="text" name="name" value={newItem.name} onChange={handleAddItemChange} required />
-              <label>Quantity:</label>
-              <input type="number" name="quantity" value={newItem.quantity} onChange={handleAddItemChange} required />
-              <label>Price:</label>
-              <input type="number" name="price" value={newItem.price} onChange={handleAddItemChange} required />
-
-              <div className="modal-buttons">
-                <button type="submit">Add Item</button>
-                <button type="button" onClick={() => setShowModal(false)}>Cancel</button>
-              </div>
-            </form>
           </div>
         </div>
       )}

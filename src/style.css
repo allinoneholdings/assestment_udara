@@ -1,0 +1,779 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Josefin Sans', sans-serif;
+
+}
+
+.hero {
+  min-height: 100vh;
+  width: 100%;
+  background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(../liquor-store.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  overflow: hidden; /* Prevent horizontal scroll */
+  display: flex;
+  flex-direction: column;
+}
+
+nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 40px;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.logo{
+    color: white;
+    font-size: 28px;
+}
+
+span{
+    color: #ea158e;
+}
+
+nav ul li {
+    list-style-type: none;
+    display: inline-block;
+    padding: 10px 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #ea158e;
+    transition: .3s;
+    text-decoration: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 2px;
+
+}
+
+button{
+    border: none;
+    background: #ea158e;
+    padding: 12px 30px;
+    border-radius: 30px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    transition: .4s;
+}
+
+button:hover{
+    cursor: pointer;
+
+}
+
+.hero-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    text-align: center;
+}
+
+.hero-text h1{
+    font-size: 50px;
+    margin-bottom: 20px;
+}
+
+.hero-text p{
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+footer p {
+    margin-left: 10px;
+    color: white;
+}
+
+.login-form {
+    height: 100vh;
+    width: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(../liquor-store.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.login-form-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-form-container h2 {
+    margin-bottom: 20px;
+}
+
+.login-form-container label {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+    text-align: left;
+    width: 300px;
+}
+
+.login-form-container input {
+    width: 300px;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+
+.login-form-container button {
+    width: 320px;
+    padding: 10px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    background: #ea158e;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    transition: .4s;
+}
+
+.login-form-container button:hover {
+    cursor: pointer;
+    background: #c0126b;
+}
+
+.about-us {
+    padding: 60px 20px;
+    color: #ffffff;
+    height: 100%;
+    width: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),url(../liquor-store.jpg);
+    background-size: cover;
+    background-position: center;
+}
+
+.about-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.montserrat-bold {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 2.5em;
+    color: #ffffff;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.montserrat-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 1.8em;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.montserrat-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.2em;
+    color: #ea158e;
+    margin-bottom: 10px;
+}
+
+.montserrat-cta {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 3em;
+    color: #ea158e; 
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.josefin-text, .josefin-text-lg {
+    font-family: 'Josefin Sans', sans-serif;
+    line-height: 1.6;
+    font-weight: 400;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.josefin-text-lg {
+    font-size: 1.15em;
+    font-weight: 300;
+    text-align: center;
+}
+
+.separator {
+    border: 0;
+    height: 1px;
+    background-color: #ddd;
+    margin: 40px auto;
+    width: 80%;
+}
+
+.about-story, .about-footer {
+    text-align: center;
+}
+
+.about-features {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+
+.feature-card {
+    flex-basis: calc(33.33% - 20px);
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #000000;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.about-footer {
+  position: relative;
+  margin-top: 50px;
+  
+}
+
+.cart-section {
+  margin-top: 60px;
+  width: 100%;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+}
+
+.cart-section h2 {
+  color: white;
+  margin-bottom: 15px;
+}
+
+.cart-section .user-table {
+  margin-bottom: 10px;
+}
+
+.search-bar {
+  position: relative;
+  margin: 0 auto 0 auto;
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  width: 90%;
+}
+
+
+.search-bar h2 {
+  margin-bottom: 20px;
+}
+
+/* Search row */
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.search-row label {
+  font-weight: 600;
+  color: white;
+}
+
+.search-row input {
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: none;
+  width: 350px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+.search-row input:focus {
+  box-shadow: 0 0 5px #ea158e;
+  background: rgba(255,255,255,0.95);
+}
+
+.search-row button {
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 14px;
+  background: #ea158e;
+  color: white;
+  border: none;
+  transition: 0.3s;
+}
+
+.search-row button:hover {
+  background: #c0126b;
+  cursor: pointer;
+}
+
+/* Filter row styling */
+.filter-row {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.filter-row select {
+  padding: 10px 15px;
+  border-radius: 25px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  color: #000;
+  min-width: 160px;
+  outline: none;
+  transition: 0.3s;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.filter-row select:hover,
+.filter-row select:focus {
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(234,21,142,0.3);
+}
+
+.items-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.item-card {
+  padding: 4px;
+  background-color: #f5f5f5;
+  border: 1px solid #eee;
+  width: 150px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card:hover {
+  transform: translateY(-3px);
+}
+
+.item-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  color: #000;
+}
+
+.item-card p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #000;
+}
+
+.table-container {
+  width: 100%;
+  margin: 50px auto;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.table-container .add-button{
+  position: absolute;
+  top: 140px;
+  right: 80px;
+  background-color: #ea158e;
+  border: none;
+  padding: 10px 20px;
+}
+
+.table-containers {
+  position: relative;
+  margin: 0 auto 40px auto;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.table-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.table-containers,
+.cart-section {
+  position: relative;
+  margin: 40px auto;
+  width: 90%;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  padding: 20px;
+}
+
+.table-scroll {
+  max-height: 300px;
+  overflow-y: auto; 
+  overflow-x: auto;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.table-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+  background-color: #ea158e;
+  border-radius: 10px;
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;        
+  justify-content: center;    
+  gap: 5px;                   
+  height: 36px;               
+}
+
+.quantity-controls button {
+  width: 36px;               
+  height: 36px;
+  display: flex;
+  align-items: center;       
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 20px;
+}
+
+.quantity-controls span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 350px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.modal-content h3 {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.modal-content p {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-content strong {
+  margin-top: 5px;
+}
+
+.add-item-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.add-item-form input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.add-item-form select {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 14px;
+  color: #333;
+  appearance: none; /* Remove default arrow */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: 0.3s;
+  position: relative;
+}
+
+.add-item-form select:focus {
+  border-color: #ea158e;
+  box-shadow: 0 0 5px rgba(234,21,142,0.5);
+  outline: none;
+}
+
+.add-item-form select option {
+  color: #333;
+  background: #fff;
+}
+
+/* Optional: custom arrow for dropdown */
+.add-item-form select {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><polygon points='0,0 16,0 8,8' fill='%23ea158e'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+
+/* --- General Form Inputs --- */
+.add-item-form input,
+.add-item-form select {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  appearance: none; /* for select dropdowns */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* --- Focus State --- */
+.add-item-form input:focus,
+.add-item-form select:focus {
+  border-color: #ea158e;
+  box-shadow: 0 0 8px rgba(234, 21, 142, 0.3);
+}
+
+/* --- Placeholder text --- */
+.add-item-form input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+/* --- Custom arrow for select dropdown --- */
+.add-item-form select {
+  background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><polygon points='0,0 16,0 8,8' fill='%23ea158e'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  cursor: pointer;
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0,0,0,0.85);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  animation: slideIn 0.4s ease;
+}
+
+.toast.success {
+  background-color: #28a745;
+}
+
+.toast.error {
+  background-color: #dc3545;
+}
+
+@keyframes slideIn {
+  0% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-buttons button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-buttons button[type="submit"] {
+  background-color:  #ea158e;
+  color: white;
+}
+
+.modal-buttons button[type="button"] {
+  background-color: #ff0000;
+}
+
+.user-table thead th {
+  position: sticky;
+  top: 0;
+  background: #ea158e;
+  z-index: 2;
+}
+
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.user-table th {
+  background-color: #ea158e;
+  color: white;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.user-table td {
+  color: white;
+}
+
+.user-table td button {
+  margin: 0 10px;
+}
+
+.user-table tr:hover td {
+  color: #000;
+}
+
+.user-table tr:hover {
+  background-color: #f9f9f9;
+  transition: background-color 0.3s;
+}
+
+
+/* --- Delete Button --- */
+.delete-btn {
+  background-color: #ea158e;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.delete-btn:hover {
+  background-color: #e60000;
+  transform: scale(1.05);
+}
+
+@media (max-width: 992px) {
+    .feature-card {
+        flex-basis: calc(50% - 15px);
+    }
+}
+
+@media (max-width: 600px) {
+    .feature-card {
+        flex-basis: 100%;
+    }
+    
+    .montserrat-bold {
+        font-size: 2em;
+    }
+    
+    .montserrat-cta {
+        font-size: 2em;
+    }
+}
